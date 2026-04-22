@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
 
 const Register = () => {
-    const [form, setForm] = useState({ name: '', email: '', password: '' });
+    const [form, setForm] = useState({ name: '', email: '', password: '', role: 'user' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
@@ -20,7 +20,8 @@ const Register = () => {
         try {
             const { data } = await registerUser(form);
             login(data.token);
-            navigate('/dashboard');
+            const role = data.data?.role;
+            navigate(role === 'admin' ? '/dashboard/admin' : '/dashboard/user');
         } catch (err) {
             console.error("Validation Errors:", err.response?.data?.errors);
 
@@ -45,6 +46,18 @@ const Register = () => {
                             />
                         </div>
                     ))}
+                    <div style={{ marginBottom: 16 }}>
+                        <label style={{ display: 'block', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>Role</label>
+                        <select
+                            name="role"
+                            value={form.role}
+                            onChange={handleChange}
+                            style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 14, background: '#fff' }}
+                        >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
                     <button type="submit" disabled={loading}
                         style={{ width: '100%', padding: '11px', borderRadius: 8, background: '#3b82f6', color: '#fff', border: 'none', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
                         {loading ? 'Creating account...' : 'Create account'}
