@@ -20,7 +20,9 @@ const Login = () => {
         try {
             const { data } = await loginUser(form);
             login(data.token);
-            navigate(from, { replace: true });
+            const role = data.data?.role;
+            const destination = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
+            navigate(destination, { replace: true });
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
         } finally { setLoading(false); }
