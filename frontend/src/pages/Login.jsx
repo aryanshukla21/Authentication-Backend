@@ -22,7 +22,7 @@ const Login = () => {
             login(data.token);
             const role = data.data?.role;
             const destination = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
-            navigate(from === '/dashboard' ? destination : from, { replace: true });
+            navigate(destination, { replace: true });
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
         } finally { setLoading(false); }
